@@ -1,9 +1,9 @@
-from typing import Any, TypeVar, Generic, Union
+from typing import Any, Generic, Union, Callable, Type
 from functools import partial
 
-from .monad import Func, Monad
+from .monad import T, Func, Monad
 
-T = TypeVar('T')
+EitherFunc = Callable[[T], 'Either']
 
 
 class Either(Monad, Generic[T]):
@@ -13,6 +13,9 @@ class Either(Monad, Generic[T]):
 
     def get_error(self) -> Union[Exception, None]:
         return self._error
+
+    def error_type(self) -> Type:
+        return type(self._error)
 
     def _bind(self, f: Func) -> 'Either':
         if self._error is not None or self._value is None:
@@ -26,7 +29,7 @@ class Either(Monad, Generic[T]):
             return Either(None, e)
 
     @staticmethod
-    def try_(f: Func):
+    def try_(f: Func) -> EitherFunc:
         def _inner(f: Func, x: Any=None):
             try:
                 value = f(x) if x else f()
@@ -37,7 +40,7 @@ class Either(Monad, Generic[T]):
         return partial(_inner, f)
 
     @staticmethod
-    def try_bind(f: Func) -> Func:
+    def try_bind(f: Func) -> EitherFunc:
         def _inner(f: Func, either: Either):
             return either._try_bind(f)
 
