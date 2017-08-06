@@ -1,9 +1,11 @@
 from functools import partial
-from typing import Callable, Any, Generic, TypeVar
+from typing import Callable, Generic, TypeVar
 from abc import ABCMeta, abstractmethod
 
 T = TypeVar('T')
-Func = Callable[[T], Any]
+S = TypeVar('S')
+TCaller = Callable[[T], S]
+TCallerWrapped = Callable[['Monad[T]'], 'Monad[S]']
 
 
 class Monad(Generic[T]):
@@ -12,15 +14,17 @@ class Monad(Generic[T]):
     def __init__(self, value: T):
         self._value = value or None
 
-    def get_value(self) -> T:
+    def value(self) -> T:
         return self._value
 
     @abstractmethod
-    def _bind(self, f: Func) -> 'Monad': pass
+    def call(self, f: TCaller) -> 'Monad[S]': pass
 
     @staticmethod
-    def bind(fn: Func) -> Func:
-        def __inner(fn: Func, monad: Monad):
-            return monad._bind(fn)
+    def call_partial(f: TCaller) -> TCallerWrapped:
+        def __inner(f: TCaller, monad: Monad) -> 'Monad[S]':
+            return monad.call(f)
 
-        return partial(__inner, fn)
+        return partial(__inner, f)
+
+
