@@ -5,13 +5,14 @@ from .monad import T, S, Monad, TCaller
 
 EitherFunc = Callable[[T], 'Either']
 TReturner = Callable[..., T]
+EitherTOrS = Union['Either[Optional[S]]', 'Either[T]']
 
 
 class Either(Monad, Generic[T]):
 
     # Initializers
 
-    def __init__(self, value: T, error: Exception=None):
+    def __init__(self, value: T, error: Exception=None) -> None:
         super().__init__(value)
         self._error = error or None
 
@@ -37,12 +38,12 @@ class Either(Monad, Generic[T]):
 
     # Public instance methods
 
-    def call(self, f: TCaller) -> 'Either[Optional[S]]':
+    def call(self, f: TCaller) -> EitherTOrS:
         if self._error is not None or self._value is None:
             return self
         return Either(f(self._value))
 
-    def try_call(self, f: TCaller) -> 'Either[Optional[S]]':
+    def try_call(self, f: TCaller) -> EitherTOrS:
         try:
             return self.call(f)
         except Exception as e:

@@ -11,7 +11,7 @@ TCallerWrapped = Callable[['Monad[T]'], 'Monad[S]']
 class Monad(Generic[T]):
     __metaclass__ = ABCMeta
 
-    def __init__(self, value: T):
+    def __init__(self, value: T) -> None:
         self._value = value or None
 
     def value(self) -> T:

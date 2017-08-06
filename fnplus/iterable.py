@@ -1,17 +1,18 @@
-from typing import Any, Callable, Tuple, Iterable, TypeVar
+from typing import Callable, Tuple, Iterable, TypeVar
 
 from .curried import curried
 
 T = TypeVar('T')
+S = TypeVar('S')
 
 
 @curried
-def tmap(func: Callable[[T], Any], iterable: Iterable[T]) -> Tuple:
+def tmap(func: Callable[[T], S], iterable: Iterable[T]) -> Tuple[S, ...]:
     return tuple(map(func, iterable))
 
 
 @curried
-def tfilter(func: Callable[[T], bool], iterable: Iterable[T]) -> Tuple[T]:
+def tfilter(func: Callable[[T], bool], iterable: Iterable[T]) -> Tuple[T, ...]:
     return tuple(filter(func, iterable))
 
 
