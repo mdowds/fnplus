@@ -30,9 +30,11 @@ class Either(Monad, Generic[T]):
 
     # Getters
 
-    def error(self) -> Union[Exception, None]:
+    @property
+    def error(self) -> Optional[Exception]:
         return self._error
 
+    @property
     def error_type(self) -> Type:
         return type(self._error)
 

@@ -1,5 +1,5 @@
 from functools import partial
-from typing import Callable, Generic, TypeVar
+from typing import Callable, Generic, TypeVar, Optional
 from abc import ABCMeta, abstractmethod
 
 T = TypeVar('T')
@@ -14,7 +14,8 @@ class Monad(Generic[T]):
     def __init__(self, value: T) -> None:
         self._value = value or None
 
-    def value(self) -> T:
+    @property
+    def value(self) -> Optional[T]:
         return self._value
 
     @abstractmethod
