@@ -16,3 +16,7 @@ class TestIterable(unittest.TestCase):
     def test_find(self):
         self.assertEqual("foo", find(lambda x: x == "foo", ("foo", "bar")))
         self.assertEqual("foo", find(lambda x: x == "foo", ["foo", "bar"]))
+
+    def test_find_element_not_present(self):
+        self.assertIsNone(find(lambda x: x == "baz", ("foo", "bar")))
+        self.assertIsNone(find(lambda x: x == "baz", ["foo", "bar"]))

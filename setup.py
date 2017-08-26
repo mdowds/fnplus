@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='fnplus',
-    version='0.4',
+    version='0.4.1',
     description='Yet another functional programming library',
     url='http://github.com/mdowds/fnplus',
     author='Matt Dowds',
